@@ -1,13 +1,8 @@
 package com.mas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mas.data.User;
-import com.mas.data.UserRepo;
-import com.mas.error.PasswordDoNotMatchError;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.mas.service.AuthService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -29,21 +24,22 @@ public class AuthController {
                 user.getEmail()
         );
     }
-
-    record RegisterRequest(
-            @JsonProperty("first_name") String firstName,
-            @JsonProperty("last_name") String lastName,
-            String email,
-            String password,
-            @JsonProperty("password_confirm") String passwordConfirm
-    ) {
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest loginRequest){
+        var user = authService.login(loginRequest.email, loginRequest.password);
+        return new LoginResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail()
+        );
     }
 
-    record RegisterResponse(
-            Long id,
-            @JsonProperty("first_name") String firstName,
-            @JsonProperty("last_name") String lastName,
-            String email
-    ) {
-    }
+    record RegisterRequest(@JsonProperty("first_name") String firstName, @JsonProperty("last_name") String lastName, String email, String password, @JsonProperty("password_confirm") String passwordConfirm) { }
+
+    record RegisterResponse(Long id, @JsonProperty("first_name") String firstName, @JsonProperty("last_name") String lastName, String email) { }
+
+    record LoginRequest( String email, String password) { }
+
+    record LoginResponse(Long id, @JsonProperty("first_name") String firstName, @JsonProperty("last_name") String lastName, String email) { }
 }
