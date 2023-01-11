@@ -1,4 +1,4 @@
-package com.mas;
+package com.mas.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

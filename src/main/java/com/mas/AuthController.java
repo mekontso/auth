@@ -1,7 +1,12 @@
 package com.mas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mas.data.User;
+import com.mas.data.UserRepo;
+import com.mas.error.PasswordDoNotMatchError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -15,6 +20,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest registerRequest) {
+        if(!Objects.equals(registerRequest.password(), registerRequest.passwordConfirm()))
+            throw new PasswordDoNotMatchError();
         var user = userRepo.save(
                 User.of(
                         registerRequest.firstName,
