@@ -26,13 +26,8 @@ public class AuthController {
     }
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest){
-        var user = authService.login(loginRequest.email, loginRequest.password);
-        return new LoginResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail()
-        );
+        var token = authService.login(loginRequest.email, loginRequest.password);
+        return new LoginResponse(token.getToken());
     }
 
     record RegisterRequest(@JsonProperty("first_name") String firstName, @JsonProperty("last_name") String lastName, String email, String password, @JsonProperty("password_confirm") String passwordConfirm) { }
@@ -41,5 +36,5 @@ public class AuthController {
 
     record LoginRequest( String email, String password) { }
 
-    record LoginResponse(Long id, @JsonProperty("first_name") String firstName, @JsonProperty("last_name") String lastName, String email) { }
+    record LoginResponse( String token) { }
 }
