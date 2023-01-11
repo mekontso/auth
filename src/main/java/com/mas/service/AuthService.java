@@ -42,9 +42,9 @@ public class AuthService {
         return user;
     }
 
-    public Token login(String email, String password) {
+    public Login login(String email, String password) {
         var user = userRepo.findByEmail(email).orElseThrow(InvalidCredentialsError::new);
         if (!passwordEncoder.matches(password, user.getPassword())) throw new InvalidCredentialsError();
-        return Token.of(user.getId(), 10L, accessTokenSecret);
+        return Login.of(user.getId(), accessTokenSecret,refreshTokenSecret);
     }
 }

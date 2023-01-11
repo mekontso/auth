@@ -9,12 +9,12 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-public class Token {
+public class Jwt {
     @Getter
     private final String token;
 
 
-    private Token(String token) {
+    private Jwt(String token) {
         this.token = token;
     }
 
@@ -25,7 +25,7 @@ public class Token {
      * @param secretKey
      * @return
      */
-    public static Token of(Long userId, Long validityInMinutes, String secretKey){
+    public static Jwt of(Long userId, Long validityInMinutes, String secretKey){
         var issueDate = Instant.now();
         var expiration = issueDate.plus(validityInMinutes, ChronoUnit.MINUTES);
         var token = Jwts.builder()
@@ -34,6 +34,6 @@ public class Token {
                 .setExpiration(Date.from(expiration))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .compact();
-        return new Token(token);
+        return new Jwt(token);
     }
 }
