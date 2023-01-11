@@ -3,7 +3,7 @@ package com.mas;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     private final UserRepo userRepo;
